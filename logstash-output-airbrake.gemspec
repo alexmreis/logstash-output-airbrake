@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name            = "logstash-output-airbrake"
-  s.version         = "0.2.2"
+  s.version         = "0.2.3"
   s.licenses        = ["Apache License (2.0)"]
   s.summary         = "Logstash Output to Airbrake"
   s.description     = "Output events to Airbrake"
@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   s.metadata = { "logstash_plugin" => "true", "logstash_group" => "output" }
 
   # Gem dependencies
-  s.add_runtime_dependency "logstash-core", ">= 1.4.0", "< 3.0.0"
+  s.add_runtime_dependency "logstash-core", ">= 1.4.0", "< 6.0.0"
 
   s.add_runtime_dependency "airbrake", ['~> 4.0']
 

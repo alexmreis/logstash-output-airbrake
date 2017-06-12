@@ -1,11 +1,3 @@
-# encoding: utf-8
-require "logstash/namespace"
-require "logstash/outputs/base"
-
-require "airbrake"
-require "zlib"
-
-# This output lets you send logs to Airbrake.
 class LogStash::Outputs::Airbrake < LogStash::Outputs::Base
   milestone 1
 
@@ -36,7 +28,9 @@ class LogStash::Outputs::Airbrake < LogStash::Outputs::Base
 
       c.host   = @host if @host
       c.port   = @port if @port
+      c.project_id = 1
       c.secure = @port.to_i == 443
+      @logger.info("Configured airbrake with host #{c.host} port #{c.port} key #{c.api_key} environment #{c.environment_name}")
     end
   end # def register
 
@@ -44,6 +38,7 @@ class LogStash::Outputs::Airbrake < LogStash::Outputs::Base
   def receive(event)
     return unless output?(event)
 
+    @logger.trace("Sending to airbrake #{event.inspect}")
     send_notice(build_notice(event))
   end # def receive
 
@@ -51,8 +46,8 @@ class LogStash::Outputs::Airbrake < LogStash::Outputs::Base
   def build_notice(event)
     opts = {
       :error_class   => @error_type,
-      :error_message => event['message'],
-      :host          => event['host'],
+      :error_message => event.get('message'),
+      :host          => event.get('host'),
       :parameters    => event.to_hash
     }
 
@@ -90,3 +85,4 @@ class LogStash::Outputs::Airbrake::Notice < Airbrake::Notice
     @backtrace = Airbrake::Backtrace.parse("#{error_crc32}:42:in `#{opts[:error_message].to_s}'")
   end
 end
+
